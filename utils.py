@@ -15,17 +15,20 @@ from bounding_box_detector import *
 
 
 def main():
-    img = chunk_image_path("notebook.png", show=True)
-    og = cv.imread("notebook.png") 
+
+    f = "image.png"
+
+    img = chunk_image_path(f, show=True)
+    og = cv.imread(f) 
     boxes = grab_bounding_boxes(img)
     print(boxes)
     for box in boxes:
         print(box)
        
-        pt1 = (box[0], box[2])
-        pt2 = (box[0], box[3])
-        pt3 = (box[1], box[3])
-        pt4 = (box[1], box[2])
+        pt1 = (box[2] - 5, box[0] - 5)
+        pt2 = (box[3] + 5, box[0] - 5)
+        pt3 = (box[3] + 5, box[1] + 5)
+        pt4 = (box[2] - 5, box[1] + 5)
 
         cv.rectangle(og, pt1, pt3, (0, 255, 0), 2)  # Green color, thickness 2
     
@@ -64,8 +67,8 @@ def chunk_image(img, show=False):
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    gray_image[gray_image < 64] = 0
-    gray_image[gray_image >= 64] = 255
+    gray_image[gray_image < 200] = 0
+    gray_image[gray_image >= 200] = 255
 
 
     if show:

@@ -53,6 +53,52 @@ def flood(img, h, w, visited, coor):
     return coor
 
 
+def correct_for_equal(res):
+    
+    real_res = []
+    print(res)
+    ignore = set()
+
+    for i in range(len(res)):
+        
+        if i in ignore:
+            continue
+
+        if abs(res[i][1] - res[i][0]) > 8:
+
+            real_res.append(res[i])
+            continue
+
+        for j in range(i+1, len(res)):
+
+            
+
+            if j in ignore:
+                continue
+
+
+            if abs(res[i][2] - res[j][2]) < 10 and abs(res[i][3] - res[j][3]) < 10:
+                
+                ignore.add(i)
+                ignore.add(j)
+
+                lo = min(res[i][0], res[j][0])
+                hi = max(res[i][1], res[j][1])
+
+                l =  min(res[i][2], res[j][2])
+                r =  max(res[i][3], res[j][3])
+
+                c = [lo, hi, l , r]
+
+                real_res.append(c)
+                break
+   
+    return real_res
+
+
+
+
+
 def grab_bounding_boxes(img):
     # returns an np array of c1, c2, c3, c4 which are the corner in clockwise order from TL
     # 
@@ -79,13 +125,15 @@ def grab_bounding_boxes(img):
             if coor == [h, h, w, w]:
                 continue
 
-            if coor[1] - coor[0] < 16:
+            if coor[1] - coor[0] < 4:
                 continue
 
-            if coor[3] - coor[2] < 16:
+            if coor[3] - coor[2] < 4:
                 continue
 
             res.append(coor)
+
+    res = correct_for_equal(res)
 
     return res
     
