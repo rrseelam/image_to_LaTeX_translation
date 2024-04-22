@@ -4,3 +4,7 @@ venv
 processed_training/*
 combined_training/*
 datasets/*
+*.zip
+/archive
+/archive1
+/__pycache__
