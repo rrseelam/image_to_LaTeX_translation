@@ -45,7 +45,24 @@ def chunk_image_path(img_path, show=False):
     image = cv.imread(img_path) 
 
     return chunk_image(image, show)
-  
+
+def filter_image(img, lb, up, grayscale=False):
+    # filters image intensity based on lower bound (lb) and upper bound(ub)
+    # all values in img < lb get set to 0
+    # all values in img >= up get set to 255
+    # return a copy of the filtered image
+
+    # Convert image to grayscale
+    gray = img.copy()
+    if grayscale: 
+        gray = cv.cvtColor(gray, cv.COLOR_BGR2GRAY)
+
+
+    gray[gray < lb] = 0
+    gray[gray >= up] = 255
+
+    return gray
+
 
 def chunk_image(img, show=False):
     # returns an np array of a a image compressed with out compression format
@@ -67,9 +84,7 @@ def chunk_image(img, show=False):
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    gray_image[gray_image < 200] = 0
-    gray_image[gray_image >= 200] = 255
-
+    gray_image = filter_image(gray_image, 200, 200, False)
 
     if show:
         cv.imshow("img", gray_image)
