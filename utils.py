@@ -10,9 +10,9 @@ Data Preprocessing Script
 import numpy as np
 import cv2 as cv
 
-from data_preprocessing import *
 from bounding_box_detector import *
 
+from torch.utils.data import Dataset
 
 def main():
 
@@ -45,7 +45,24 @@ def chunk_image_path(img_path, show=False):
     image = cv.imread(img_path) 
 
     return chunk_image(image, show)
-  
+
+def filter_image(img, lb, up, grayscale=False):
+    # filters image intensity based on lower bound (lb) and upper bound(ub)
+    # all values in img < lb get set to 0
+    # all values in img >= up get set to 255
+    # return a copy of the filtered image
+
+    # Convert image to grayscale
+    gray = img.copy()
+    if grayscale: 
+        gray = cv.cvtColor(gray, cv.COLOR_BGR2GRAY)
+        # print(gray.shape)
+
+    gray[gray < lb] = 0
+    gray[gray >= up] = 255
+
+    return gray
+
 
 def chunk_image(img, show=False):
     # returns an np array of a a image compressed with out compression format
@@ -61,15 +78,14 @@ def chunk_image(img, show=False):
         cv.destroyAllWindows()
 
     gray_image = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    # print(gray_image.shape)
 
     if show:
         cv.imshow("img", gray_image)
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    gray_image[gray_image < 200] = 0
-    gray_image[gray_image >= 200] = 255
-
+    gray_image = filter_image(gray_image, 200, 200, False)
 
     if show:
         cv.imshow("img", gray_image)
@@ -77,6 +93,35 @@ def chunk_image(img, show=False):
         cv.destroyAllWindows()
    
     return gray_image
+
+
+def encode_labels(labels):
+    # input:
+    #   labels -> (np.array) labels of a labeled dataset
+    # output:
+    #   tuple(class_names, one_hot)
+    #    - class_names -> (np.array) unique class names
+    #    - one_hot -> (np.array) one-hot encoding of the original labels
+
+    class_names = np.unique(labels)
+    one_hot = np.array([np.where(class_names == l)[0][0] for l in labels])
+    return class_names, one_hot
+
+class SymbolDataset(Dataset):
+    def __init__(self, images, labels, transforms=None):
+        self.images = images
+        self.labels = labels
+        self.transforms = transforms
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, idx):
+        image = self.images[idx]
+        label = self.labels[idx]
+        if self.transforms:
+            image = self.transforms(image)
+        return image, label
 
 
 if __name__ == "__main__":
