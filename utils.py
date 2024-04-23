@@ -10,9 +10,9 @@ Data Preprocessing Script
 import numpy as np
 import cv2 as cv
 
-from data_preprocessing import *
 from bounding_box_detector import *
 
+from torch.utils.data import Dataset
 
 def main():
 
@@ -107,6 +107,21 @@ def encode_labels(labels):
     one_hot = np.array([np.where(class_names == l)[0][0] for l in labels])
     return class_names, one_hot
 
+class SymbolDataset(Dataset):
+    def __init__(self, images, labels, transforms=None):
+        self.images = images
+        self.labels = labels
+        self.transforms = transforms
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, idx):
+        image = self.images[idx]
+        label = self.labels[idx]
+        if self.transforms:
+            image = self.transforms(image)
+        return image, label
 
 
 if __name__ == "__main__":
