@@ -15,6 +15,7 @@ from matplotlib import pyplot as plt
 
 
 def process_img(img, lb, ub, size=(32,32)):
+
     processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
     processed = ut.filter_image(processed, lb, ub, grayscale=True) #filter image
     return processed
@@ -55,7 +56,7 @@ def save_as_numpy(root_dir, output_dir):
             for file_name in os.listdir(subdirectory_path):
                 # Read the image
                 image_path = os.path.join(subdirectory_path, file_name)
-                image = cv2.imread(image_path)
+                image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
 
                 # Append the image to the list
                 images.append(image)
@@ -80,10 +81,11 @@ def main():
         data = np.load('datasets/symbols.npz')
         imgs = data['images']
         labels = data['labels']
-
+        # print(imgs.shape)
         rand_idx = np.random.randint(0, imgs.shape[0])  
+        # print(imgs[rand_idx])
         plt.clf()
-        plt.imshow(imgs[rand_idx], interpolation='nearest')
+        plt.imshow(imgs[rand_idx], interpolation='nearest', cmap='gray')
         plt.title("label = " + labels[rand_idx])
         plt.show()
 

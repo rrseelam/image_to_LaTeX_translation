@@ -56,7 +56,7 @@ def filter_image(img, lb, up, grayscale=False):
     gray = img.copy()
     if grayscale: 
         gray = cv.cvtColor(gray, cv.COLOR_BGR2GRAY)
-
+        # print(gray.shape)
 
     gray[gray < lb] = 0
     gray[gray >= up] = 255
@@ -78,6 +78,7 @@ def chunk_image(img, show=False):
         cv.destroyAllWindows()
 
     gray_image = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    # print(gray_image.shape)
 
     if show:
         cv.imshow("img", gray_image)
@@ -92,6 +93,20 @@ def chunk_image(img, show=False):
         cv.destroyAllWindows()
    
     return gray_image
+
+
+def encode_labels(labels):
+    # input:
+    #   labels -> (np.array) labels of a labeled dataset
+    # output:
+    #   tuple(class_names, one_hot)
+    #    - class_names -> (np.array) unique class names
+    #    - one_hot -> (np.array) one-hot encoding of the original labels
+
+    class_names = np.unique(labels)
+    one_hot = np.array([np.where(class_names == l)[0][0] for l in labels])
+    return class_names, one_hot
+
 
 
 if __name__ == "__main__":
