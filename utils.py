@@ -16,7 +16,7 @@ from bounding_box_detector import *
 
 def main():
 
-    f = "image.png"
+    f = "raw_datasets/CROHME_test_2011-converted/TestData1_2_sub_29.png"
 
     img = chunk_image_path(f, show=True)
     og = cv.imread(f) 
@@ -25,12 +25,12 @@ def main():
     for box in boxes:
         print(box)
        
-        pt1 = (box[2] - 5, box[0] - 5)
-        pt2 = (box[3] + 5, box[0] - 5)
-        pt3 = (box[3] + 5, box[1] + 5)
-        pt4 = (box[2] - 5, box[1] + 5)
+        pt1 = (box[2] - 1, box[0] - 1)
+        pt2 = (box[3] + 1, box[0] - 1)
+        pt3 = (box[3] + 1, box[1] + 1)
+        pt4 = (box[2] - 1, box[1] + 1)
 
-        cv.rectangle(og, pt1, pt3, (0, 255, 0), 2)  # Green color, thickness 2
+        cv.rectangle(og, pt1, pt3, (256, 128, 0), 1)  # Green color, thickness 2
     
     cv.imshow("img", og)
     cv.waitKey(0)
