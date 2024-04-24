@@ -8,3 +8,5 @@ datasets/*
 /archive
 /archive1
 /__pycache__
+/.vscode
+symbols.npz
