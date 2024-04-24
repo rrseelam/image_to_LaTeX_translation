@@ -14,10 +14,10 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-def process_img(img, lb, ub, size=(32,32)):
-
-    processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
-    processed = ut.filter_image(processed, lb, ub, grayscale=True) #filter image
+def process_img(img, ub, size=(32,32)):
+    processed = img
+    #processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
+    processed = ut.filter_image(processed, ub, grayscale=True) #filter image
     return processed
 
 def process_all(root_dir, output_dir):
@@ -38,7 +38,7 @@ def process_all(root_dir, output_dir):
                 image = cv2.imread(source_file_path)
                 
                 # Call the process function on the image
-                processed_image = process_img(image, 200, 200)
+                processed_image = process_img(image, 200)
                 
                 # Save the processed image to the destination subdirectory
                 cv2.imwrite(destination_file_path, processed_image)
@@ -57,6 +57,8 @@ def save_as_numpy(root_dir, output_dir):
                 # Read the image
                 image_path = os.path.join(subdirectory_path, file_name)
                 image = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+                image = cv2.normalize(image, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
+
 
                 # Append the image to the list
                 images.append(image)
@@ -74,20 +76,21 @@ def save_as_numpy(root_dir, output_dir):
     print(f"Saved images and labels to {output_dir}")
 
 def main():
-    # process_all(root_dir="combined_training", output_dir="processed_training")
-    # save_as_numpy(root_dir="processed_training", output_dir="datasets/symbols.npz")
+    #process_all(root_dir="combined_training", output_dir="processed_training_no_resize")
+    save_as_numpy(root_dir="processed_training_no_resize", output_dir="symbols_no_resize.npz")
 
-    for i in range(10):
-        data = np.load('datasets/symbols.npz')
-        imgs = data['images']
-        labels = data['labels']
-        # print(imgs.shape)
-        rand_idx = np.random.randint(0, imgs.shape[0])  
-        # print(imgs[rand_idx])
-        plt.clf()
-        plt.imshow(imgs[rand_idx], interpolation='nearest', cmap='gray')
-        plt.title("label = " + labels[rand_idx])
-        plt.show()
+    # for i in range(10):
+    #     data = np.load('symbols.npz')
+    #     imgs = data['images']
+    #     labels = data['labels']
+    #     # print(imgs.shape)
+    #     rand_idx = np.random.randint(0, imgs.shape[0])
+    #     # cv2.imshow("img", imgs[rand_idx])
+    #     # print(imgs[rand_idx])
+    #     # plt.clf()
+    #     # plt.imshow(imgs[rand_idx], interpolation='nearest', cmap='gray')
+    #     # plt.title("label = " + labels[rand_idx])
+    #     # plt.show()
 
 
 if __name__ == "__main__":
