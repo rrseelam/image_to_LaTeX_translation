@@ -20,7 +20,5 @@ def convert_equation_to_latex():
     #   
     return -1
 
-import os
-
 if __name__ == "__main__":
     main()
