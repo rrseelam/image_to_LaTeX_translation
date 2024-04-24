@@ -15,8 +15,8 @@ from matplotlib import pyplot as plt
 
 
 def process_img(img, ub, size=(32,32)):
-
-    processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
+    processed = img
+    #processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
     processed = ut.filter_image(processed, ub, grayscale=True) #filter image
     return processed
 
@@ -76,21 +76,21 @@ def save_as_numpy(root_dir, output_dir):
     print(f"Saved images and labels to {output_dir}")
 
 def main():
-    # process_all(root_dir="combined_training", output_dir="processed_training")
-    # save_as_numpy(root_dir="processed_training", output_dir="symbols.npz")
+    #process_all(root_dir="combined_training", output_dir="processed_training_no_resize")
+    save_as_numpy(root_dir="processed_training_no_resize", output_dir="symbols_no_resize.npz")
 
-    for i in range(10):
-        data = np.load('symbols.npz')
-        imgs = data['images']
-        labels = data['labels']
-        # print(imgs.shape)
-        rand_idx = np.random.randint(0, imgs.shape[0])
-        # cv2.imshow("img", imgs[rand_idx])
-        # print(imgs[rand_idx])
-        # plt.clf()
-        # plt.imshow(imgs[rand_idx], interpolation='nearest', cmap='gray')
-        # plt.title("label = " + labels[rand_idx])
-        # plt.show()
+    # for i in range(10):
+    #     data = np.load('symbols.npz')
+    #     imgs = data['images']
+    #     labels = data['labels']
+    #     # print(imgs.shape)
+    #     rand_idx = np.random.randint(0, imgs.shape[0])
+    #     # cv2.imshow("img", imgs[rand_idx])
+    #     # print(imgs[rand_idx])
+    #     # plt.clf()
+    #     # plt.imshow(imgs[rand_idx], interpolation='nearest', cmap='gray')
+    #     # plt.title("label = " + labels[rand_idx])
+    #     # plt.show()
 
 
 if __name__ == "__main__":
