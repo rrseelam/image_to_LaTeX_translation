@@ -46,7 +46,7 @@ def chunk_image_path(img_path, show=False):
 
     return chunk_image(image, show)
 
-def filter_image(img, lb, up, grayscale=False):
+def filter_image(img, up, grayscale=False):
     # filters image intensity based on lower bound (lb) and upper bound(ub)
     # all values in img < lb get set to 0
     # all values in img >= up get set to 255
@@ -58,7 +58,6 @@ def filter_image(img, lb, up, grayscale=False):
         gray = cv.cvtColor(gray, cv.COLOR_BGR2GRAY)
         # print(gray.shape)
 
-    gray[gray < lb] = 0
     gray[gray >= up] = 255
 
     return gray
