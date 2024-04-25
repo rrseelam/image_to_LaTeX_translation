@@ -51,7 +51,6 @@ def main():
     for f in fs:
         img = ut.chunk_image_path(f)
         get_box_map(img)
-        break
 
     print("This is a ulitiy module")
 
@@ -86,10 +85,6 @@ def convert_numpy_array(img):
     processed = ut.filter_image(processed, 200, grayscale=False) #filter image
     processed = cv2.normalize(processed, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
 
-    cv2.imshow("mihir version", processed)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
     return processed
 
 def box_to_class(img, box):
@@ -113,7 +108,7 @@ def get_box_map(img):
 
     boxes = ut.grab_bounding_boxes(img)
 
-    model = torch.load("transfer_model_custom_net.pth", map_location=torch.device('cpu'))
+    model = torch.load("transfer_model_custom_net_clean.pth", map_location=torch.device('cpu'))
     model.eval()
 
     for box in boxes:
