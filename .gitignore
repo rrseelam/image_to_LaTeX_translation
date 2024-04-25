@@ -17,3 +17,4 @@ symbols_2000_1.npz
 /processed_training
 /processed_training_2000
 /processed_training_2000_1
+*.pth

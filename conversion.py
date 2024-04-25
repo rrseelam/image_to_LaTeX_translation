@@ -2,6 +2,7 @@ import torch
 import cv2
 import utils as ut
 import torch.nn as nn
+import torchvision
 
 num_classes = 43
 
@@ -50,7 +51,15 @@ def main():
 
     for f in fs:
         img = ut.chunk_image_path(f)
-        get_box_map(img)
+        bm = get_box_map(img)
+        latex = bm_to_latex(bm)
+
+        cv2.imshow(latex, img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+
+        
 
     print("This is a ulitiy module")
 
@@ -87,18 +96,40 @@ def convert_numpy_array(img):
 
     return processed
 
-def box_to_class(img, box):
+def custom_compare(x):
+    return x[0]
+
+def bm_to_latex(bm):
     
-    # processed = img
-    # processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
-    # processed = ut.filter_image(processed, 200, grayscale=True) #filter image
-    # processed = cv2.normalize(processed, None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_32F)
-    # return processed
+    loc_to_char = []
 
+    # converting to point-char form
+    for entry in bm:
+        x = (entry[0][2] + entry[0][3]) / 2
+        y = (entry[0][0] + entry[0][1]) / 2
+        loc_to_char.append((x, y, entry[1]))
 
-    pass
+    # sort the list based on x position
+    loc_to_char = sorted(loc_to_char, key=custom_compare)
 
-def get_box_map(img):
+    latex = "$" + loc_to_char[0][2]
+
+    main_line = loc_to_char[0][1]
+    delta = 25
+
+    for i in range(1, len(loc_to_char)):
+        y = loc_to_char[i][1]   
+        if y > main_line + delta:
+            latex += f"_{{{loc_to_char[i][2]}}}"
+        elif y < main_line - delta:
+            latex += f"^{{{loc_to_char[i][2]}}}"
+        else:
+            latex += loc_to_char[i][2]
+
+    latex += "$"
+    return latex
+
+def get_box_map(img, wait=False):
 
     # 1. conv to grayscale
     # 2. get the boxes
@@ -108,18 +139,25 @@ def get_box_map(img):
 
     boxes = ut.grab_bounding_boxes(img)
 
-    model = torch.load("transfer_model_custom_net_clean.pth", map_location=torch.device('cpu'))
+    box_to_char = []
+
+    model = torch.load("transfer_model_spiral_clean.pth", map_location=torch.device('cpu'))
     model.eval()
 
     for box in boxes:
+
+       
         sub_image = img[box[0]-4:box[1]+4, box[2]-4:box[3]+4]
         c = predict(sub_image, model)
 
-        cv2.imshow(c, sub_image)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        if wait:
+            cv2.imshow(c, sub_image)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
-    pass
+        box_to_char.append([box, c])
+    
+    return box_to_char
 
 
 
