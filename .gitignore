@@ -10,7 +10,8 @@ datasets/*
 /__pycache__
 /.vscode
 symbols.npz
+symbols_2000.npz
 /combined_training
 /__MACOSX
 /processed_training
-/processed_training_no_resize
+/processed_training_2000

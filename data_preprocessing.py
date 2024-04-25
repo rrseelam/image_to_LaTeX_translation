@@ -16,7 +16,7 @@ from matplotlib import pyplot as plt
 
 def process_img(img, ub, size=(32,32)):
     processed = img
-    #processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
+    processed = cv2.resize(img, size, interpolation=cv2.INTER_AREA) #resize image
     processed = ut.filter_image(processed, ub, grayscale=True) #filter image
     return processed
 
@@ -29,8 +29,14 @@ def process_all(root_dir, output_dir):
             # Create the destination subdirectory if it doesn't exist
             os.makedirs(destination_subdir, exist_ok=True)
 
+            counter = 0
+
             # Process images in the source subdirectory and copy them to the destination subdirectory
             for file_name in os.listdir(source_subdir):
+
+                # if counter == 2000:
+                #     break
+
                 source_file_path = os.path.join(source_subdir, file_name)
                 destination_file_path = os.path.join(destination_subdir, file_name)
                 
@@ -43,6 +49,8 @@ def process_all(root_dir, output_dir):
                 # Save the processed image to the destination subdirectory
                 cv2.imwrite(destination_file_path, processed_image)
                 print(f"Processed and copied {file_name} to {destination_subdir}")
+
+                counter += 1
 
 def save_as_numpy(root_dir, output_dir):
     images = []
@@ -71,13 +79,12 @@ def save_as_numpy(root_dir, output_dir):
     images_array = np.array(images)
     labels_array = np.array(labels)
 
-    # Save the numpy arrays to the output file
     np.savez(output_dir, images=images_array, labels=labels_array)
     print(f"Saved images and labels to {output_dir}")
 
 def main():
-    #process_all(root_dir="combined_training", output_dir="processed_training_no_resize")
-    save_as_numpy(root_dir="processed_training_no_resize", output_dir="symbols_no_resize.npz")
+    #process_all(root_dir="combined_training", output_dir="processed_training")
+    save_as_numpy(root_dir="processed_training", output_dir="symbols.npz")
 
     # for i in range(10):
     #     data = np.load('symbols.npz')
