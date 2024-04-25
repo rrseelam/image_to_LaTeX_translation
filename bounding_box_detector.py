@@ -185,6 +185,7 @@ def remove_subsets(res):
             
     return real_res_2
 
+
 def grab_bounding_boxes(img):
     # returns an np array of c1, c2, c3, c4 which are the corner in clockwise order from TL
     # 

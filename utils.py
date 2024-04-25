@@ -42,6 +42,7 @@ def main():
 
     print("This is a ulitiy module")
 
+
 def chunk_image_path(img_path, show=False):
     # returns an np array of a a image compressed with out compression format
     # expects an image in the form
@@ -49,6 +50,7 @@ def chunk_image_path(img_path, show=False):
     image = cv.imread(img_path) 
 
     return chunk_image(image, show)
+
 
 def filter_image(img, up, grayscale=False):
     # filters image intensity based on lower bound (lb) and upper bound(ub)
@@ -79,7 +81,7 @@ def chunk_image(img, show=False):
         cv.imshow("img", img)
         cv.waitKey(0)
         cv.destroyAllWindows()
-
+    
     gray_image = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     # print(gray_image.shape)
 
