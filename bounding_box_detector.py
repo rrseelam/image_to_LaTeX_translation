@@ -112,10 +112,6 @@ def correct_for_i(res):
             real_res.append(res[i])
             continue
 
-        if abs(res[j][1] - res[j][0]) < 0 and abs(res[j][2] - res[j][3]) > 8:
-            # dot
-            continue
-
         added = False
 
         for j in range(0, len(res)):
@@ -155,6 +151,40 @@ def correct_for_i(res):
     return real_res
 
 
+def remove_subsets(res):
+
+    real_res = []
+    ignore = set()
+
+    for i in range(len(res)):
+
+        if i in ignore:
+            continue
+
+        real_res.append(res[i])
+
+        for j in range(i+1, len(res)):
+            if res[i][0] <= res[j][0] and res[i][1] >= res[j][1] and res[i][2] <= res[j][2] and res[i][3] >= res[j][3]:
+                ignore.add(j)
+
+
+    # other way now
+    ignore = set()
+    real_res_2 = []
+
+    for i in range(len(real_res)-1, -1, -1):
+
+        if i in ignore:
+            continue
+
+        real_res_2.append(real_res[i])
+
+        for j in range(i-1, -1, -1):
+            if real_res[i][0] <= real_res[j][0] and real_res[i][1] >= real_res[j][1] and real_res[i][2] <= real_res[j][2] and real_res[i][3] >= real_res[j][3]:
+                ignore.add(j)
+            
+    return real_res_2
+
 def grab_bounding_boxes(img):
     # returns an np array of c1, c2, c3, c4 which are the corner in clockwise order from TL
     # 
@@ -191,6 +221,7 @@ def grab_bounding_boxes(img):
 
     res = correct_for_equal(res)
     res = correct_for_i(res)
+    res = remove_subsets(res)
 
     return res
     
