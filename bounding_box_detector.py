@@ -39,12 +39,16 @@ def flood(img, h, w, visited, coor):
     coor[3] = max(w, coor[3])
 
 
-    optH = [-2, -1, 0, 1, 2,]
-    optW = [-2, -1, 0, 1, 2,]
+    # optH = [-2, -1, 0, 1, 2,]
+    # optW = [-2, -1, 0, 1, 2,]
+   
+    optH = [-1, 0, 1]
+    optW = [-1, 0, 1]
 
     for oh in optH:
         for ow in optW:
-            flood(img, h+oh, w+ow, visited, coor)
+            if visited[h+oh, w+ow] == 0:
+                flood(img, h+oh, w+ow, visited, coor)
     
     return coor
 

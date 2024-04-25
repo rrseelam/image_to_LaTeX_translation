@@ -21,6 +21,9 @@ def main():
           "raw_datasets/CROHME_test_2011-converted/TestData2_1_sub_2.png",
           "raw_datasets/CROHME_test_2011-converted/TestData2_3_sub_8.png"]
 
+    #fs = [f"img{i}.png" for i in range(1,6)]
+    #fs = ["PNG_image.png"]
+
     for f in fs:
         img = chunk_image_path(f, show=True)
         og = cv.imread(f) 
@@ -49,7 +52,17 @@ def chunk_image_path(img_path, show=False):
     
     image = cv.imread(img_path) 
 
-    return chunk_image(image, show)
+    h,w,_ = image.shape
+
+    new_width = 515
+    new_height = int((w/515) * h)
+
+    new_dimensions = (new_width, new_height)
+
+    # Resize the image
+    resized_image = cv.resize(image, new_dimensions)
+
+    return chunk_image(resized_image, show)
 
 
 def filter_image(img, up, grayscale=False):
