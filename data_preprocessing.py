@@ -34,8 +34,8 @@ def process_all(root_dir, output_dir):
             # Process images in the source subdirectory and copy them to the destination subdirectory
             for file_name in os.listdir(source_subdir):
 
-                # if counter == 2000:
-                #     break
+                if counter == 2000:
+                    break
 
                 source_file_path = os.path.join(source_subdir, file_name)
                 destination_file_path = os.path.join(destination_subdir, file_name)
@@ -83,8 +83,8 @@ def save_as_numpy(root_dir, output_dir):
     print(f"Saved images and labels to {output_dir}")
 
 def main():
-    #process_all(root_dir="combined_training", output_dir="processed_training")
-    save_as_numpy(root_dir="processed_training", output_dir="symbols.npz")
+    #process_all(root_dir="combined_training", output_dir="processed_training_2000_1")
+    save_as_numpy(root_dir="processed_training_2000_1", output_dir="symbols_2000_1.npz")
 
     # for i in range(10):
     #     data = np.load('symbols.npz')
