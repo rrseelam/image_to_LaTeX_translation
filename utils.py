@@ -16,25 +16,29 @@ from torch.utils.data import Dataset
 
 def main():
 
-    f = "raw_datasets/CROHME_test_2011-converted/TestData1_2_sub_29.png"
+    # "raw_datasets/CROHME_test_2011-converted/TestData1_2_sub_29.png"
+    fs = ["raw_datasets/CROHME_test_2011-converted/TestData2_2_sub_14.png",
+          "raw_datasets/CROHME_test_2011-converted/TestData2_1_sub_2.png",
+          "raw_datasets/CROHME_test_2011-converted/TestData2_3_sub_8.png"]
 
-    img = chunk_image_path(f, show=True)
-    og = cv.imread(f) 
-    boxes = grab_bounding_boxes(img)
-    print(boxes)
-    for box in boxes:
-        print(box)
-       
-        pt1 = (box[2] - 1, box[0] - 1)
-        pt2 = (box[3] + 1, box[0] - 1)
-        pt3 = (box[3] + 1, box[1] + 1)
-        pt4 = (box[2] - 1, box[1] + 1)
+    for f in fs:
+        img = chunk_image_path(f, show=True)
+        og = cv.imread(f) 
+        boxes = grab_bounding_boxes(img)
+        print(boxes)
+        for box in boxes:
+            print(box)
+        
+            pt1 = (box[2] - 1, box[0] - 1)
+            pt2 = (box[3] + 1, box[0] - 1)
+            pt3 = (box[3] + 1, box[1] + 1)
+            pt4 = (box[2] - 1, box[1] + 1)
 
-        cv.rectangle(og, pt1, pt3, (256, 128, 0), 1)  # Green color, thickness 2
-    
-    cv.imshow("img", og)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+            cv.rectangle(og, pt1, pt3, (256, 128, 0), 1)  # Green color, thickness 2
+        
+        cv.imshow("img", og)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
 
     print("This is a ulitiy module")
 
@@ -84,7 +88,7 @@ def chunk_image(img, show=False):
         cv.waitKey(0)
         cv.destroyAllWindows()
 
-    gray_image = filter_image(gray_image, 200, 200, False)
+    gray_image = filter_image(gray_image, 200, grayscale=False)
 
     if show:
         cv.imshow("img", gray_image)

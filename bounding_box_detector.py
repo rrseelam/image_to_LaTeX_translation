@@ -26,29 +26,25 @@ def flood(img, h, w, visited, coor):
 
     if visited[h,w] == 1:
         return
+    
+    visited[h,w] = 1
 
     if img[h,w] != 0:
         return
     
-    visited[h,w] = 1
-
     coor[0] = min(h, coor[0])
     coor[1] = max(h, coor[1])
 
     coor[2] = min(w, coor[2])
     coor[3] = max(w, coor[3])
 
-    flood(img, h+1, w, visited, coor)
-    flood(img, h-1, w, visited, coor)
 
-    flood(img, h, w-1, visited, coor)
-    flood(img, h, w+1, visited, coor)
+    optH = [-2, -1, 0, 1, 2,]
+    optW = [-2, -1, 0, 1, 2,]
 
-    flood(img, h+1, w+1, visited, coor)
-    flood(img, h+1, w-1, visited, coor)
-
-    flood(img, h-1, w+1, visited, coor)
-    flood(img, h-1, w-1, visited, coor)
+    for oh in optH:
+        for ow in optW:
+            flood(img, h+oh, w+ow, visited, coor)
     
     return coor
 
@@ -56,8 +52,9 @@ def flood(img, h, w, visited, coor):
 def correct_for_equal(res):
     
     real_res = []
-    print(res)
+
     ignore = set()
+
 
     for i in range(len(res)):
         
@@ -68,14 +65,14 @@ def correct_for_equal(res):
 
             real_res.append(res[i])
             continue
-
+        added = False
         for j in range(i+1, len(res)):
-
-            
 
             if j in ignore:
                 continue
 
+            if abs(res[j][1] - res[j][0]) > 8:
+                continue
 
             if abs(res[i][2] - res[j][2]) < 10 and abs(res[i][3] - res[j][3]) < 10:
                 
@@ -91,12 +88,71 @@ def correct_for_equal(res):
                 c = [lo, hi, l , r]
 
                 real_res.append(c)
+                added = True
                 break
-   
+        
+        if not added:
+            real_res.append(res[i])
+    
     return real_res
 
 
+def correct_for_i(res):
+    
+    real_res = []
 
+    ignore = set()
+
+    for i in range(len(res)):
+
+        if i in ignore:
+            continue
+        
+        if abs(res[i][2] - res[i][3]) > 8:
+            real_res.append(res[i])
+            continue
+
+        if abs(res[j][1] - res[j][0]) < 0 and abs(res[j][2] - res[j][3]) > 8:
+            # dot
+            continue
+
+        added = False
+
+        for j in range(0, len(res)):
+
+            if i == j:
+                continue
+
+            if j in ignore:
+                continue
+
+            if abs(res[j][1] - res[j][0]) > 8:
+                continue
+
+            if abs(res[j][2] - res[j][3]) > 8:
+                continue
+
+            if abs(res[i][2] - res[j][2]) < 30 and abs(res[i][3] - res[j][3]) < 30:
+                
+                ignore.add(i)
+                ignore.add(j)
+
+                lo = min(res[i][0], res[j][0])
+                hi = max(res[i][1], res[j][1])
+
+                l =  min(res[i][2], res[j][2])
+                r =  max(res[i][3], res[j][3])
+
+                c = [lo, hi, l , r]
+
+                real_res.append(c)
+                added = True
+                break
+
+        if not added:
+            real_res.append(res[i])
+    
+    return real_res
 
 
 def grab_bounding_boxes(img):
@@ -122,18 +178,19 @@ def grab_bounding_boxes(img):
             if coor == None:
                 continue
 
-            if coor == [h, h, w, w]:
+            # if coor == [h, h, w, w]:
+            #     continue
+
+            if coor[1] - coor[0] <= 1:
                 continue
 
-            if coor[1] - coor[0] < 4:
-                continue
-
-            if coor[3] - coor[2] < 4:
+            if coor[3] - coor[2] <= 1:
                 continue
 
             res.append(coor)
 
     res = correct_for_equal(res)
+    res = correct_for_i(res)
 
     return res
     
