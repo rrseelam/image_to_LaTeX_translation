@@ -84,7 +84,7 @@ def save_as_numpy(root_dir, output_dir):
 
 def main():
     #process_all(root_dir="combined_training", output_dir="processed_training_2000_1")
-    save_as_numpy(root_dir="processed_training_2000_1", output_dir="symbols_2000_1.npz")
+    save_as_numpy(root_dir="processed_training_2000", output_dir="symbols_2000.npz")
 
     # for i in range(10):
     #     data = np.load('symbols.npz')
