@@ -9,7 +9,8 @@ import numpy as np
 
 #class_names = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'C', 'a', 'b', 'd', 'dot', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'p', 'pi', 'q', 'r', 's', 'slash', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 #class_names = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'C', 'a', 'b', 'dot', 'e', 'k', 'p', 'pi', 'slash', 'u', 'v', 'w', 'x', 'y', 'z']
-class_names = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'C', 'a', 'b', 'dot', 'e', 'i', 'p', 'pi', 'slash', 'u', 'x', 'y']
+#class_names = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'C', 'a', 'b', 'dot', 'e', 'i', 'p', 'pi', 'slash', 'u', 'x', 'y']
+class_names = ['(', ')', '+', '-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '=', 'a', 'b', 'd', 'dot', 'e', 'p', 'pi', 'slash', 'u', 'x', 'y']
 
 num_classes = len(class_names)
 
@@ -139,12 +140,16 @@ def predict(img, model, wait=True):
     # print(class_names)
     # exit(1)
 
-    if wait:
-        cv2.imshow(class_names[preds[0]], img_show)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    # if wait:
+    #     cv2.imshow(class_names[preds[0]], img_show)
+    #     cv2.waitKey(0)
+    #     cv2.destroyAllWindows()
 
     # given an img (32 x 32) return predicted class
+
+    print(preds)
+    if preds.size == 0:
+        return 0
     return class_names[preds[0]]
 
 
@@ -242,11 +247,12 @@ def get_box_map(img, wait=False):
 
     model = torch.load("transfer_model_spiral_super_clean.pth", map_location=torch.device('cpu'))
     model.eval()
-    pad = 10
+    data_pad = 3
+    np_pad = 7
     for box in boxes:
 
-        sub_image = img[box[0]:box[1], box[2]:box[3]]
-        sub_image = np.pad(sub_image, pad_width=pad, mode='constant', constant_values=255)
+        sub_image = img[box[0] - data_pad:box[1] + data_pad, box[2] - data_pad:box[3] + data_pad]
+        sub_image = np.pad(sub_image, pad_width=np_pad, mode='constant', constant_values=255)
         c = predict(sub_image, model)
 
 

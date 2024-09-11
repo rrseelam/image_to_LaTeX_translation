@@ -22,11 +22,22 @@ def main():
           "raw_datasets/CROHME_test_2011-converted/TestData2_3_sub_8.png"]
 
     #fs = [f"img{i}.png" for i in range(1,6)]
-    #fs = ["PNG_image.png"]
+    # fs = ["resize3.png"]
 
     for f in fs:
         img = chunk_image_path(f, show=True)
         og = cv.imread(f) 
+
+        print(og)
+
+        # new_width = 515
+        # new_height = 63
+
+        # new_dimensions = (new_width, new_height)
+
+        # Resize the image
+        # og = cv.resize(og, new_dimensions)
+
         boxes = grab_bounding_boxes(img)
         print(boxes)
         for box in boxes:
@@ -52,17 +63,17 @@ def chunk_image_path(img_path, show=False):
     
     image = cv.imread(img_path) 
 
-    h,w,_ = image.shape
+    h, w, _ = image.shape
 
-    new_width = 515
-    new_height = int((w/515) * h)
+    # new_width = 515
+    # new_height = 63
 
-    new_dimensions = (new_width, new_height)
+    # new_dimensions = (new_width, new_height)
 
-    # Resize the image
-    resized_image = cv.resize(image, new_dimensions)
+    # # Resize the image
+    # resized_image = cv.resize(image, new_dimensions)
 
-    return chunk_image(resized_image, show)
+    return chunk_image(image, show)
 
 
 def filter_image(img, up, grayscale=False):
